@@ -1,0 +1,38 @@
+<?xml version= "1.0"?>
+<!DOCTYPE alumnos[
+    <!ELEMENT alumnos (alumno*)>
+    <!ELEMENT alumno (nombre, apellido, nacimiento, curso)>
+    <!ELEMENT nombre (#PCDATA)>
+    <!ELEMENT apellido (#PCDATA)>
+    <!ELEMENT nacimiento (#PCDATA)>
+    <!ELEMENT curso (#PCDATA)>
+
+    <!ATTLIST alumno
+    id ID #REQUIRED
+    edad CDATA #IMPLIED
+    becado (Si|No) "No">
+]>
+
+<alumnos>
+    <alumno id="a1" edad="18" becado="Si"> 
+        <nombre>Eren </nombre>
+        <apellido>Jeager</apellido>
+        <nacimiento>07/05/2005</nacimiento>
+        <curso>software</curso>
+    </alumno>
+
+    <alumno id="b2" edad="19">
+        <nombre>Mikasa </nombre>
+        <apellido>Ackerman</apellido>
+        <nacimiento>07/05/2005</nacimiento>
+        <curso>Matem[aticas</curso>
+    </alumno>
+
+    <alumno id="c3" edad="20" becado="No">
+        <nombre>Jhonny  </nombre>
+        <apellido>Joestar</apellido>
+        <nacimiento>07/05/2005</nacimiento>
+        <curso>Hacker</curso>
+    </alumno>
+
+</alumnos>
