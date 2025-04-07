@@ -1,0 +1,16 @@
+
+
+<alumnos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="alumnos.xsd">
+
+    <alumno>
+        <nombre>Johnny Joestar</nombre>
+        <nacimiento>2014-03-30</nacimiento>
+    </alumno>
+
+    <alumno>
+        <nombre>Eren Jaeger</nombre>
+        <nacimiento>2014-03-30</nacimiento>
+    </alumno>
+
+</alumnos>
