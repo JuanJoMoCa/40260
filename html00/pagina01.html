@@ -1,37 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina 01</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌟 Tabla de Alumnos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      transition: all 0.2s ease-in-out;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    button {
+      background-color: #ff4b2b;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #ff416c;
+      transform: scale(1.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+    }
+
+    thead {
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+
+    .no-data {
+      color: #ffcccb;
+      font-style: italic;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border: 3px solid #fff;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background-color: rgba(255, 0, 0, 0.7);
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 10px;
+      color: #fff;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      td {
+        padding: 10px;
+        text-align: right;
+        position: relative;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        text-align: left;
+        font-weight: bold;
+        color: #ddd;
+      }
+    }
+  </style>
 </head>
 <body>
-    <button onclick="loadXMLDoc()">Ejecutar función</button>
-    <table id="demo"></table>
+  <div class="container">
+    <h1>📚 Listado de Alumnos</h1>
+    <button id="loadButton">🔄 Cargar Datos</button>
+    <span id="loading" class="loading-spinner" style="display:none;"></span>
+    <div id="error" class="error" style="display:none;"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>👤 Nombre</th>
+          <th>🎂 Fecha de Nacimiento</th>
+          <th>📧 Correo</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 
-    <script>
-        function loadXMLDoc() {
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
-                const xmlDoc = xhttp.responseXML;
-                const cd = xmlDoc.getElementsByTagName("CD");
-                myFunction(cd);
-            }
-            xhttp.open("GET", "cd_catalog.xml");
-            xhttp.send();
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadButton = document.getElementById('loadButton');
+      const loadingSpinner = document.getElementById('loading');
+      const errorBox = document.getElementById('error');
+      const tableBody = document.getElementById('tableBody');
+
+      loadButton.addEventListener('click', () => {
+        fetchAlumnos();
+      });
+
+      function fetchAlumnos() {
+        loadingSpinner.style.display = 'inline-block';
+        errorBox.style.display = 'none';
+        tableBody.innerHTML = '';
+
+        fetch('alumnos.xml')
+          .then(res => {
+            if (!res.ok) throw new Error(`Error ${res.status}`);
+            return res.text();
+          })
+          .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+          .then(data => displayAlumnos(data))
+          .catch(err => {
+            errorBox.style.display = 'block';
+            errorBox.textContent = `⚠️ Error al cargar: ${err.message}`;
+          })
+          .finally(() => loadingSpinner.style.display = 'none');
+      }
+
+      function displayAlumnos(xmlDoc) {
+        const alumnos = xmlDoc.getElementsByTagName("alumno");
+
+        if (alumnos.length === 0) {
+          errorBox.style.display = 'block';
+          errorBox.textContent = '⚠️ No se encontraron alumnos.';
+          return;
         }
 
-        function myFunction(cd) {
-            let table = "<tr><th>Artist</th><th>Title</th></tr>";
-            for (let i = 0; i < cd.length; i++) {
-                table += "<tr><td>" +
-                cd[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue +
-                "</td><td>" +
-                cd[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
-                "</td></tr>";
-            }
-            document.getElementById("demo").innerHTML = table;
-        }
-    </script>
+        let rows = '';
+        Array.from(alumnos).forEach(alumno => {
+          const nombre = getText(alumno, "nombre");
+          const nacimiento = getText(alumno, "nacimiento");
+          const correo = alumno.getAttribute("correo") || '<span class="no-data">No disponible</span>';
+
+          rows += `
+            <tr>
+              <td data-label="Nombre">${nombre}</td>
+              <td data-label="Nacimiento">${formatDate(nacimiento)}</td>
+              <td data-label="Correo">${correo}</td>
+            </tr>
+          `;
+        });
+
+        tableBody.innerHTML = rows;
+      }
+
+      function getText(parent, tagName) {
+        const el = parent.getElementsByTagName(tagName)[0];
+        return el && el.textContent ? el.textContent : '';
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return !isNaN(date.getTime())
+          ? date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+          : dateStr;
+      }
+    });
+  </script>
 </body>
 </html>

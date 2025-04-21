@@ -1,0 +1,21 @@
+
+
+<alumnos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="alumnos.xsd">
+    <alumno correo="JoJo@estudiantes.uv.mx">
+        <nombre>Johnny Joestar</nombre>
+        <nacimiento>2014-03-30</nacimiento>
+    </alumno>
+    <alumno>
+        <nombre>Eren Jaeger</nombre>
+        <nacimiento>2014-03-30</nacimiento>
+    </alumno>
+    <alumno correo="GodSpin@estudiantes.uv.mx">
+        <nombre>Julio César Zeppeli</nombre>
+        <nacimiento>1866-03-30</nacimiento>
+    </alumno>
+    <alumno>
+        <nombre>Monserrat Barradas</nombre>
+        <nacimiento>2000-01-12</nacimiento>
+    </alumno>
+</alumnos>

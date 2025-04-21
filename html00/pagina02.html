@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catálogo Frutiger Aero</title>
+
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Trebuchet+MS&display=swap" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Trebuchet MS', sans-serif;
+      background: linear-gradient(145deg, #b0e0e6, #98fb98);
+      background-attachment: fixed;
+      color: #004d40;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #007acc;
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #ffffffaa;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 16px rgba(0, 128, 128, 0.3), 0 0 30px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      max-width: 900px;
+      width: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.01);
+    }
+
+    button {
+      background: linear-gradient(to right, #00c3ff, #39ff14);
+      color: #fff;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 200, 255, 0.5);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #39ff14, #00c3ff);
+      transform: scale(1.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #00bfff;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px #007acc;
+    }
+
+    tr:nth-child(even) {
+      background-color: #e0ffff;
+    }
+
+    tr:hover {
+      background-color: #ccffcc;
+      transition: background-color 0.3s ease;
+    }
+
+    #error {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #004d40;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1><i class="fas fa-leaf"></i> Catálogo de CDs</h1>
+
+  <div class="card">
+    <button onclick="loadXMLDoc()"><i class="fas fa-magic"></i> Ejecutar función</button>
+    <div id="error"></div>
+    <table id="demo"></table>
+  </div>
+
+  <footer>
+    🌤 Hecho por Sebastián 🍃✨
+  </footer>
+
+  <script>
+    const loadXMLDoc = async () => {
+      try {
+        const response = await fetch('cd_catalog.xml');
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(text, "application/xml");
+        const cds = xmlDoc.getElementsByTagName("CD");
+        myFunction(cds);
+        document.getElementById("error").textContent = "";
+      } catch (error) {
+        console.error('Error loading XML:', error);
+        document.getElementById("error").textContent = "⚠ No se pudo cargar el archivo XML.";
+      }
+    };
+
+    const myFunction = (cds) => {
+      let table = "<tr><th>Artista</th><th>Título</th></tr>";
+      Array.from(cds).forEach(cd => {
+        const artist = cd.getElementsByTagName("ARTIST")[0]?.textContent || "Desconocido";
+        const title = cd.getElementsByTagName("TITLE")[0]?.textContent || "Sin título";
+        table += `<tr><td>${artist}</td><td>${title}</td></tr>`;
+      });
+      document.getElementById("demo").innerHTML = table;
+    };
+  </script>
+
+</body>
+</html>
